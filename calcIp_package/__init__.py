@@ -21,14 +21,15 @@ def decimal_ipv4(subnet_mask, lenght_ip=4):
     return subnet
 
 # funzione che determina la classe di indirizzo di quell'ipv4
-def which_class(ip):
+def which_class(ip, subnet_mask_cidr):
     first_byte = int(ip[0])
-    if 0 <= first_byte <= 127:
+    if 0 <= first_byte <= 127 and subnet_mask_cidr == 8:    # impongo una doppia condizione perchè grazie a CIDR e VSLM posso avere un ip con il primo byte pari a 192, ma posso dedicare meno o più bit alla rete rispetto ad un classe C.
         return 'A'
-    elif 128 <= first_byte <= 191:
+    elif 128 <= first_byte <= 191 and subnet_mask_cidr == 16:
         return 'B'
-    elif 192 <= first_byte <= 223:
+    elif 192 <= first_byte <= 223 and subnet_mask_cidr == 24:
         return 'C'
+    return None
 
 
 # funzione che manda a video un indirizzo ip binario con la suddivisione dei bit dedicati alla rete e all'host

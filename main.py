@@ -63,7 +63,7 @@ for i in range(LENGHT_BIT_IP):
         broadcast_address_bin.append('1')   # nei bit dell'host invece li pongo tutti a 1
 broadcast_address_dec = decimal_ipv4(broadcast_address_bin)
 
-print(f"IP: {'.'.join(ip_address_dec)}\nSubnet mask: {'.'.join(subnet_mask_dec)}\nSubnet mask in notazione CIDR: /{subnet_mask_cidr}\nIP rete: {'.'.join(network_address_dec)}\nIP broadcast: {'.'.join(broadcast_address_dec)}\nHost massimi: {max_host}\nClasse di indirizzo: {which_class(ip_address_dec)}")
+print(f"IP: {'.'.join(ip_address_dec)}\nSubnet mask: {'.'.join(subnet_mask_dec)}\nSubnet mask in notazione CIDR: /{subnet_mask_cidr}\nIP rete: {'.'.join(network_address_dec)}\nIP broadcast: {'.'.join(broadcast_address_dec)}\nHost massimi: {max_host}\nClasse di indirizzo: {which_class(ip_address_dec, subnet_mask_cidr)}")
 print("---------------------")
 print_ip_bin(ip_address_bin, subnet_mask_cidr, "IP binario")
 print_ip_bin(subnet_mask_bin, subnet_mask_cidr, "Subnet mask binaria")
