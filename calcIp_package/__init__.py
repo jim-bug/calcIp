@@ -20,6 +20,16 @@ def decimal_ipv4(subnet_mask, lenght_ip=4):
         start += 8      # mi sposto di 8 perchè sto estrando byte
     return subnet
 
+# funzione che determina la classe di indirizzo di quell'ipv4
+def which_class(ip):
+    if 0 < ip[0] < 127:
+        return 'A'
+    elif 128 < ip[0] < 191:
+        return 'B'
+    elif 192 < ip[0] < 223:
+        return 'C'
+
+
 # funzione che manda a video un indirizzo ip binario con la suddivisione dei bit dedicati alla rete e all'host
 def print_ip_bin(ip_bin, subnet_mask_cidr, message, lenght_byte_ip=32):
     i = 0

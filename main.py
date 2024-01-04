@@ -5,7 +5,7 @@
 from sys import path
 from argparse import ArgumentParser
 from os import getcwd
-from calcIp_package import binary_ipv4, decimal_ipv4, print_ip_bin
+from calcIp_package import binary_ipv4, decimal_ipv4, print_ip_bin, which_class
 path.append(getcwd()+'\\calcIp_package')
 # path.append("C:\\Users\\Ignazio\\Desktop\\coding\\project_python\\project\\calcip\\calcIp_package")
 
@@ -63,7 +63,7 @@ for i in range(LENGHT_BIT_IP):
         broadcast_address_bin.append('1')   # nei bit dell'host invece li pongo tutti a 1
 broadcast_address_dec = decimal_ipv4(broadcast_address_bin)
 
-print(f"IP: {'.'.join(ip_address_dec)}\nSubnet mask: {'.'.join(subnet_mask_dec)}\nSubnet mask in notazione CIDR: /{subnet_mask_cidr}\nIP rete: {'.'.join(network_address_dec)}\nIP broadcast: {'.'.join(broadcast_address_dec)}\nHost massimi: {max_host}")
+print(f"IP: {'.'.join(ip_address_dec)}\nSubnet mask: {'.'.join(subnet_mask_dec)}\nSubnet mask in notazione CIDR: /{subnet_mask_cidr}\nIP rete: {'.'.join(network_address_dec)}\nIP broadcast: {'.'.join(broadcast_address_dec)}\nHost massimi: {max_host}\nClasse di indirizzo: {which_class(ip_address_dec)}")
 print("---------------------")
 print_ip_bin(ip_address_bin, subnet_mask_cidr, "IP binario")
 print_ip_bin(subnet_mask_bin, subnet_mask_cidr, "Subnet mask binaria")
