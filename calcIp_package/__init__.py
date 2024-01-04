@@ -23,7 +23,6 @@ def decimal_ipv4(subnet_mask, lenght_ip=4):
 # funzione che determina la classe di indirizzo di quell'ipv4
 def which_class(ip):
     first_byte = int(ip[0])
-    print(first_byte)
     if 0 <= first_byte <= 127:
         return 'A'
     elif 128 <= first_byte <= 191:
