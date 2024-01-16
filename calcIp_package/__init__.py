@@ -20,6 +20,16 @@ def decimal_ipv4(subnet_mask, lenght_ip=4):
         start += 8      # mi sposto di 8 perchè sto estrando byte
     return subnet
 
+# funzione che calcola la wild card binaria data la subnet mask binaria
+def wild_card_calculation(subnet_mask_bin):
+    wild_card = []
+    for i in subnet_mask_bin:
+        if i == '1':
+            wild_card.append('0')
+        else:
+            wild_card.append('1')
+    return wild_card
+
 # funzione che determina la classe di indirizzo di quell'ipv4
 def which_class(ip, subnet_mask_cidr):
     first_byte = int(ip[0])
@@ -33,7 +43,7 @@ def which_class(ip, subnet_mask_cidr):
 
 
 # funzione che manda a video un indirizzo ip binario con la suddivisione dei bit dedicati alla rete e all'host
-def print_ip_bin(ip_bin, subnet_mask_cidr, message, lenght_byte_ip=32):
+def print_ip_bin(ip_bin, message, lenght_byte_ip=32, subnet_mask_cidr=0):
     i = 0
     print(f"{message}: ", end='')
     for j in range(lenght_byte_ip):
