@@ -4,9 +4,10 @@
 # by jim_bug :)
 from sys import path
 from argparse import ArgumentParser
-from os import getcwd
+from os import getcwd, path
 from calcIp_package import binary_ipv4, decimal_ipv4, print_ip_bin, which_class, wild_card_calculation
-path.append(getcwd()+'\\calcIp_package')
+# https://www.geeksforgeeks.org/python-os-path-join-method/
+path.append(path.join(getcwd(),'calcIp_package'))
 # path.append("C:\\Users\\Ignazio\\Desktop\\coding\\project_python\\project\\calcip\\calcIp_package")
 
 
