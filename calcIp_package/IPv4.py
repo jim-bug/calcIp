@@ -5,7 +5,7 @@ class IPv4:
     BYTE = 4
     bit = 32
 
-    def __init__(self, ip: str):
+    def __init__(self, ip):
         self.__ip = {
             'bin': [],
             'dec': ip
@@ -39,6 +39,9 @@ class IPv4:
         self.subnet_mask_to_dec()
         self.wild_card_to_bin()
         self.wild_card_to_dec()
+        self.__find_network_address()
+        self.network_address_to_bin()
+        self.__find_network_broadcast()
         self.which_class()
 
     def __str__(self):
@@ -49,6 +52,8 @@ class IPv4:
             if self.__ip['dec'][i] == '/':
                 self.__subnet_mask['cidr'] = int(self.__ip['dec'][i + 1:])  # estraggo la subnet mask in notazione CIDR, sommo 1 all'indice così parto dalla prima cifra della subnet mask fino alla fine di essa.
                 self.__ip['dec'] = self.__ip['dec'][:i]  # estraggo tutto quello che c'è prima dello / quindi solamente l'ip.
+                self.__ip['dec'] = self.__ip['dec'].split('.')
+
                 break
 
     def __convert_dec_byte_to_bin(self, address, subnet_mask_cidr=0):
@@ -63,7 +68,7 @@ class IPv4:
             yield i  # uso il generatore per evitare di avere l'address come una lista di liste.
 
     def __convert_address_to_bin(self, address):
-        bytes = address.split('.')
+        bytes = address
         binary_ip = []
         for i in range(IPv4.BYTE):
             for j in self.__convert_dec_byte_to_bin(int(bytes[i])):
@@ -98,6 +103,16 @@ class IPv4:
             start = end + 1
         return decimal_address
 
+    def __find_network_address(self):
+        for i in range(IPv4.BYTE):
+            self.__network_address['dec'].append(int(self.__ip['dec'][i]) & int(self.__subnet_mask['dec'][i]))
+        return self.__network_address['dec']
+
+    def __find_network_broadcast(self):
+        pass
+
+
+
     def print_binary_ipv4(self, address, message):
         address = [i for i in address if i != '.']
         print(message, end='')
@@ -117,6 +132,10 @@ class IPv4:
     def ipv4_to_bin(self):
         self.__ip['bin'] = self.__convert_address_to_bin(self.__ip['dec'])
         return self.__ip['bin']
+
+    def network_address_to_bin(self):
+        self.__network_address['bin'] = self.__convert_address_to_bin(self.__network_address['dec'])
+        return self.__network_address['bin']
 
     def subnet_mask_to_bin(self):
         subnet_mask_bin = []
@@ -173,4 +192,4 @@ class IPv4:
 
 
 ip = IPv4("192.168.1.5/24")
-print(ip)
+# print(ip)
