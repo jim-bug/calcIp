@@ -36,9 +36,14 @@ class IPv4:
             'bin': [],
             'dec': 0
         }
+        self.__subnets = {
 
+        }
         self.__max_host = 0
         self.__class = None
+        ##############
+        self.__point_position = [8, 17, 26]
+
 
         self.__divided_ip_subnet_mask()
         self.ipv4_to_bin()
@@ -51,21 +56,30 @@ class IPv4:
         self.which_class()
 
     def to_string(self):
-        print("##########INDIRIZZI DECIMALI##########")
+        print("&&&&&&&&&&&INDIRIZZI DECIMALI&&&&&&&&&&&")
         self.__print_decimal_ipv4(self.__ip['dec'], "IP: ")
         print(f"Subnet mask in notazione CIDR:\t/{self.__subnet_mask['cidr']}")
-        self.__print_decimal_ipv4 (self.__subnet_mask['dec'], "Subnet mask: ")
-        self.__print_decimal_ipv4 (self.__wild_card['dec'], "Wild card: ")
-        self.__print_decimal_ipv4 (self.__network_address['dec'], "Indirizzi di rete: ")
-        self.__print_decimal_ipv4 (self.__broadcast_address['dec'], "Indirizzi di broadcast: ")
+        self.__print_decimal_ipv4(self.__subnet_mask['dec'], "Subnet mask: ")
+        self.__print_decimal_ipv4(self.__wild_card['dec'], "Wild card: ")
+        self.__print_decimal_ipv4(self.__network_address['dec'], "Indirizzi di rete: ")
+        self.__print_decimal_ipv4(self.__broadcast_address['dec'], "Indirizzi di broadcast: ")
         print(f"Host massimi: {self.__max_host}")
         print(f"Classe di indirizzo: {self.__class}")
-        print("##########INDIRIZZI BINARI##########")
+        print("&&&&&&&&&&&INDIRIZZI BINARI&&&&&&&&&&&")
         self.__print_binary_ipv4(self.__ip['bin'], "IP: ")
-        self.__print_binary_ipv4 (self.__subnet_mask['bin'], "Subnet mask: ")
-        self.__print_binary_ipv4 (self.__wild_card['bin'], "Wild card: ")
-        self.__print_binary_ipv4 (self.__network_address['bin'], "Indirizzo di rete: ")
-        self.__print_binary_ipv4 (self.__broadcast_address['bin'], "Indirizzi di broacast: ")
+        self.__print_binary_ipv4(self.__subnet_mask['bin'], "Subnet mask: ")
+        self.__print_binary_ipv4(self.__wild_card['bin'], "Wild card: ")
+        self.__print_binary_ipv4(self.__network_address['bin'], "Indirizzo di rete: ")
+        self.__print_binary_ipv4(self.__broadcast_address['bin'], "Indirizzi di broacast: ")
+        print(self.__subnets.keys())
+        if len(self.__subnets.keys()) != 0:     # se sono stati effettuati subnet.
+            for i in self.__subnets.keys():
+                for j in range(len(self.__subnets[i])):
+                    print("\n\n")
+                    print(f"\t\tSUBNET {j} from {i}\t\t")
+                    self.__subnets[i][j].to_string()
+
+
 
     def __divided_ip_subnet_mask(self):
         """
@@ -80,13 +94,13 @@ class IPv4:
                 break
         self.__max_host = (2**(IPv4.bit - self.__subnet_mask['cidr'])) - 2  # trovo gli host massimi di quella rete, non considerando il network e broadcast address.
 
-    def __convert_dec_byte_to_bin(self, address):
+    def __convert_dec_byte_to_bin(self, address, bit=8):
         """
         Ritorna bit dopo bit del byte convertito in binario, in questo metodo viene utilizzato un generatore.
             :param address (str): Singolo Byte dell'indirizzo IPv4
             :return i (int): Singolo bit del byte
         """
-        sequence = [0 for i in range(8)]  # preparo il byte
+        sequence = [0 for i in range(bit)]  # preparo il byte
         i = 0
         while address != 0:
             sequence[i] = address % 2
@@ -111,19 +125,6 @@ class IPv4:
                 binary_ip.append('.')
         return binary_ip
 
-    def __find_occurrence(self, iterable, key):
-        """
-        Metodo che implementa la ricerca sequenziale.
-            :param iterable (list):
-            :param key:
-            :return all_possible_occurrence (list[int): Ritorna tutte le posizioni di key in iterable.
-        """
-        all_possible_occurrence = []
-        for i in range(len(iterable)):
-            if iterable[i] == key:
-                all_possible_occurrence.append(i)
-        return all_possible_occurrence
-
     def __convert_address_to_dec(self, address):
         """
         Converte un indirizzo da binario a decimale, sfrutta due indici start e end per poter estarre da address il byte in binario.
@@ -132,7 +133,6 @@ class IPv4:
             :param address (list):
             :return decimal_address (list[str]): Ritorna l'indirizzo convertito in decimale.
         """
-        position_point_address = self.__find_occurrence(address, '.')
         start = 0
         end = 0
         decimal_number = 0
@@ -141,7 +141,7 @@ class IPv4:
             if i == IPv4.BYTE - 1:  # l'ultimo byte non prevede un . alla fine, perciò se sono arrivato all'ultima iterazione devo estrarlo diversamente l'ultimo byte
                 byte = address[end + 1:][::-1]
             else:
-                end = position_point_address[i]
+                end = self.__point_position[i]
                 byte = address[start: end][::-1]  # faccio il reverse del i-esimo byte
             for j in range(len(byte)):
                 decimal_number += (2 ** j) * byte[j]
@@ -176,6 +176,37 @@ class IPv4:
             else:
                 self.__broadcast_address['bin'].append(1)
 
+    def __format_binary_address(self, address):
+        for i in self.__point_position:
+            address.insert(i, '.')
+        return address
+
+    def __make_subnetting(self, new_subnet_mask_cidr):
+        """
+        Il metodo prende come parametro la nuova subnet mask che dovrà avere l'indirizzo ipv4 dell'istanza corrente.
+        L'idea è quella di estrarre i futuri bit delle subnet, a partire dal network address, una volta estratti vengono sovrascritti
+        con la combinazione i-esima. Esempio: se ho 192.168.1.0/24 e voglio /26
+        192.168.1.(00)000000
+        Io avrò 2^2 possibili reti, l'indirizzo di rete di ogni subnet è dato dalla sostituzioni di quei (00), con una volta 00 poi 01 10 11.
+        :param new_subnet_mask_cidr:
+        :return:
+        """
+        number_subnet_bit = new_subnet_mask_cidr - self.__subnet_mask['cidr']
+        subnet_bit = [[] for i in range(2**number_subnet_bit)]      # elevando a 2 il numero di bit ottengo il numero di reti.
+        subnet = []
+        for i in range(2**number_subnet_bit):
+            for j in self.__convert_dec_byte_to_bin(i, number_subnet_bit):
+                subnet_bit[i].append(j)
+            binary_ip = [i for i in self.__network_address['bin'] if i != '.']      # rimuovo i punti dall'indirizzo, così evito di aggiungere offset.
+            start = self.__subnet_mask['cidr']      # dato che si parte da 0, non ho bisogno di sommare 1 a questo numero, in quanto mi trovo già nei bit degli host
+            end = start + number_subnet_bit
+            binary_ip[start : end] = subnet_bit[i]
+            binary_ip = self.__format_binary_address(binary_ip)
+            ip = self.__convert_address_to_dec(binary_ip)
+            ip = IPv4(".".join(ip) + f"/{new_subnet_mask_cidr}")
+            subnet.append(ip)
+        return subnet
+
     def __print_binary_ipv4(self, address, message):
         address = [i for i in address if i != '.']
         print(message, end='')
@@ -191,6 +222,11 @@ class IPv4:
     def __print_decimal_ipv4(self, address, message):
         address = '.'.join(address)
         print(f"{message} {address}")
+
+    def subnetting(self, subnet_mask):
+        subnets = self.__make_subnetting(subnet_mask)
+        self.__subnets[f"/{subnet_mask}"] = subnets
+        return self.__subnets[f"/{subnet_mask}"]
 
     def ipv4_to_bin(self):
         """
@@ -285,5 +321,8 @@ class IPv4:
 
 
 ip = IPv4("192.168.1.5/24")
+
+
+ip.subnetting(25)
+ip.subnetting(30)
 ip.to_string()
-print(ip.__doc__)
