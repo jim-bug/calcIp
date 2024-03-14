@@ -80,7 +80,8 @@ class IPv4:
                     self.__subnets[i][j].to_string()
 
 
-
+    def __control_ipv4(self):
+	pass
     def __divided_ip_subnet_mask(self):
         """
 
