@@ -47,9 +47,25 @@ class IPv4:
 
         self.__divided_ip_subnet_mask()
         self.__control_ipv4()
+        # self.ipv4_to_bin()
+        # self.subnet_mask_to_bin()
+        # self.subnet_mask_to_dec()
+        # self.wild_card_to_bin()
+        # self.wild_card_to_dec()
+        # self.network_address_to_bin()
+        # self.broadcast_address_to_dec()
+        # self.broadcast_address_to_bin()
         self.which_class()
 
     def to_string(self):
+        self.ipv4_to_bin()
+        self.subnet_mask_to_bin()
+        self.subnet_mask_to_dec()
+        self.wild_card_to_bin()
+        self.wild_card_to_dec()
+        self.network_address_to_bin()
+        self.broadcast_address_to_dec()
+        self.broadcast_address_to_bin()
         print("&&&&&&&&&&&INDIRIZZI DECIMALI&&&&&&&&&&&")
         print(f"Stato IPv4: {self.__stateIpv4}")
         self.__print_decimal_ipv4(self.__ip['dec'], "IP: ")
@@ -76,11 +92,10 @@ class IPv4:
 
 
     def __control_ipv4(self):
-        byte_1 = 0 <= int(self.__ip['dec'][0]) <= 255
-        byte_2 = 0 <= int(self.__ip['dec'][1]) <= 255
-        byte_3 = 0 <= int(self.__ip['dec'][2]) <= 255
-        byte_4 = 0 <= int(self.__ip['dec'][3]) <= 255
-        if byte_1 and byte_2 and byte_3 and byte_4 and 0 < self.__subnet_mask['cidr'] <= 32:
+        byte = 0 <= int(self.__ip['dec'][0]) <= 255
+        for i in range(1, IPv4.BYTE+1):
+            byte = byte and 0 <= int(self.__ip['dec'][i-1]) <= 255
+        if byte and 0 < self.__subnet_mask['cidr'] <= 32:
             self.__stateIpv4 = True
         else:
             self.__stateIpv4 = False
@@ -360,5 +375,3 @@ class IPv4:
             return self.__class
         return None
 
-ip = IPv4("76.55.120.4/33")
-print(ip.broadcast_address_to_bin())
