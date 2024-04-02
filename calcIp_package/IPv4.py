@@ -1,4 +1,4 @@
-from colors.color import Colors
+from calcIp_package.colors.color import Colors
 
 
 class IPv4:
@@ -43,20 +43,15 @@ class IPv4:
         self.__class = None
         ##############
         self.__point_position = [8, 17, 26]
-
+        self.__stateIpv4 = True
 
         self.__divided_ip_subnet_mask()
-        self.ipv4_to_bin()
-        self.subnet_mask_to_bin()
-        self.subnet_mask_to_dec()
-        self.wild_card_to_bin()
-        self.wild_card_to_dec()
-        self.network_address_to_bin()
-        self.network_broadcast_to_dec()
+        self.__control_ipv4()
         self.which_class()
 
     def to_string(self):
         print("&&&&&&&&&&&INDIRIZZI DECIMALI&&&&&&&&&&&")
+        print(f"Stato IPv4: {self.__stateIpv4}")
         self.__print_decimal_ipv4(self.__ip['dec'], "IP: ")
         print(f"Subnet mask in notazione CIDR:\t/{self.__subnet_mask['cidr']}")
         self.__print_decimal_ipv4(self.__subnet_mask['dec'], "Subnet mask: ")
@@ -81,7 +76,15 @@ class IPv4:
 
 
     def __control_ipv4(self):
-	pass
+        byte_1 = 0 <= int(self.__ip['dec'][0]) <= 255
+        byte_2 = 0 <= int(self.__ip['dec'][1]) <= 255
+        byte_3 = 0 <= int(self.__ip['dec'][2]) <= 255
+        byte_4 = 0 <= int(self.__ip['dec'][3]) <= 255
+        if byte_1 and byte_2 and byte_3 and byte_4 and 0 < self.__subnet_mask['cidr'] <= 32:
+            self.__stateIpv4 = True
+        else:
+            self.__stateIpv4 = False
+
     def __divided_ip_subnet_mask(self):
         """
 
@@ -151,32 +154,6 @@ class IPv4:
             start = end + 1
         return decimal_address
 
-    def __find_network_address(self):
-        """
-        Metodo che calcola l'indirizzo di rete a cui appartiene l'indirizzo dato al costruttore. Per farlo sfrutto l'operazione and bit a bit tra ogni singolo byte dell'indirizzo e della subnet mask,
-        per, infine, convertirlo in stringa.
-            :return network_address (list[str]): Indirizzo di rete.
-        """
-        for i in range(IPv4.BYTE):
-            self.__network_address['dec'].append(str( int (self.__ip['dec'][i]) & int (self.__subnet_mask['dec'][i]) ))     # operazione and bit a bit tra ogni byte dell'indirizzo e della subnet mask
-        return self.__network_address['dec']
-
-    def __find_network_broadcast(self):
-        """
-        Metodo che trova l'indirizzo di broadcast. L'indirizzo di broadcast si trova impostando tutti i bit dell'host a 1.
-        Quindi scorro l'indirizzo di rete e finchè sono nei bit di rete li copio nel broadcast address, appena sono nei bit dell'host,
-        aggiungo 1 nel boradcast address.
-            :return broadcast_address (list): Indirizzo di broadcast
-        """
-        net_address = [i for i in self.__network_address['bin'] if i != '.']
-        for i in range(IPv4.bit):
-            if i % 8 == 0 and i != 0:
-                self.__broadcast_address['bin'].append('.')
-            if i < self.__subnet_mask['cidr']:
-                self.__broadcast_address['bin'].append(net_address[i])
-            else:
-                self.__broadcast_address['bin'].append(1)
-
     def __format_binary_address(self, address):
         for i in self.__point_position:
             address.insert(i, '.')
@@ -225,59 +202,113 @@ class IPv4:
         print(f"{message} {address}")
 
     def subnetting(self, subnet_mask):
-        subnets = self.__make_subnetting(subnet_mask)
-        self.__subnets[f"/{subnet_mask}"] = subnets
-        return self.__subnets[f"/{subnet_mask}"]
+        if self.__stateIpv4:
+            subnets = self.__make_subnetting(subnet_mask)
+            self.__subnets[f"/{subnet_mask}"] = subnets
+            return self.__subnets[f"/{subnet_mask}"]
+        else:
+            return None
 
     def ipv4_to_bin(self):
         """
         Metodo che converte l'ipv4 da decimale a binario.
             :return ip (list): Indirizzo ipv4 in binario
         """
-        self.__ip['bin'] = self.__convert_address_to_bin(self.__ip['dec'])
-        return self.__ip['bin']
+        if self.__stateIpv4:
+            self.__ip['bin'] = self.__convert_address_to_bin(self.__ip['dec'])
+            return self.__ip['bin']
+        else:
+            return None
 
     def network_address_to_bin(self):
         """
         Metodo che converte l'indirizzo di rete da decimale a binario.
             :return network_address (list):  Indirizzo di rete binario
         """
-        self.__find_network_address()
-        self.__network_address['bin'] = self.__convert_address_to_bin(self.__network_address['dec'])
-        return self.__network_address['bin']
+        if self.__stateIpv4:
+            self.network_address_to_dec()
+            self.__network_address['bin'] = self.__convert_address_to_bin(self.__network_address['dec'])
+            return self.__network_address['bin']
+        else:
+            return None
 
-    def network_broadcast_to_dec(self):
+    def network_address_to_dec(self):
+        """
+        Metodo che calcola l'indirizzo di rete a cui appartiene l'indirizzo dato al costruttore. Per farlo sfrutto l'operazione and bit a bit tra ogni singolo byte dell'indirizzo e della subnet mask,
+        per, infine, convertirlo in stringa.
+            :return network_address (list[str]): Indirizzo di rete.
+        """
+        if self.__stateIpv4:
+            self.subnet_mask_to_dec()
+            for i in range(IPv4.BYTE):
+                self.__network_address['dec'].append(str( int(self.__ip['dec'][i]) & int(self.__subnet_mask['dec'][i]) ))     # operazione and bit a bit tra ogni byte dell'indirizzo e della subnet mask
+            return self.__network_address['dec']
+        else:
+            return None
+
+    def broadcast_address_to_bin(self):
+        """
+        Metodo che trova l'indirizzo di broadcast. L'indirizzo di broadcast si trova impostando tutti i bit dell'host a 1.
+        Quindi scorro l'indirizzo di rete e finchè sono nei bit di rete li copio nel broadcast address, appena sono nei bit dell'host,
+        aggiungo 1 nel boradcast address.
+            :return broadcast_address (list): Indirizzo di broadcast
+        """
+        if self.__stateIpv4:
+            self.network_address_to_bin()
+            net_address = [i for i in self.__network_address['bin'] if i != '.']
+            for i in range(IPv4.bit):
+                if i % 8 == 0 and i != 0:
+                    self.__broadcast_address['bin'].append('.')
+                if i < self.__subnet_mask['cidr']:
+                    self.__broadcast_address['bin'].append(net_address[i])
+                else:
+                    self.__broadcast_address['bin'].append(1)
+            return self.__broadcast_address['bin']
+        else:
+            return None
+
+    def broadcast_address_to_dec(self):
         """
         Metodo che converte l'indirizzo di broadcast da binario a decimale.
             :return broadcast_address (list[str]): Indirizzo di broadcast decimale
         """
-        self.__find_network_broadcast()
-        self.__broadcast_address['dec'] = self.__convert_address_to_dec(self.__broadcast_address['bin'])
+        if self.__stateIpv4:
+            self.broadcast_address_to_bin()
+            self.__broadcast_address['dec'] = self.__convert_address_to_dec(self.__broadcast_address['bin'])
+            return self.__broadcast_address['dec']
+        else:
+            return None
 
     def subnet_mask_to_bin(self):
         """
         Metodo che converte la subnet mask da CIDR.
             :return subnet_mask_bin (list): Indirizzo binario della subnet mask.
         """
-        subnet_mask_bin = []
-        for i in range(IPv4.bit):
-            if i % 8 == 0 and i != 0:  # esclusa la prima occorrenza del contatore i.
-                subnet_mask_bin.append('.')
-            if i < self.__subnet_mask['cidr']:
-                subnet_mask_bin.append(1)
-            else:
-                subnet_mask_bin.append(0)
-        self.__subnet_mask['bin'] = subnet_mask_bin
-        return subnet_mask_bin
+        if self.__stateIpv4:
+            subnet_mask_bin = []
+            for i in range(IPv4.bit):
+                if i % 8 == 0 and i != 0:  # esclusa la prima occorrenza del contatore i.
+                    subnet_mask_bin.append('.')
+                if i < self.__subnet_mask['cidr']:
+                    subnet_mask_bin.append(1)
+                else:
+                    subnet_mask_bin.append(0)
+            self.__subnet_mask['bin'] = subnet_mask_bin
+            return subnet_mask_bin
+        else:
+            return None
 
     def subnet_mask_to_dec(self):
         """
         Metodo che converte la subnet mask da binario a decimale.
             :return subnet_mask_dec (list[str]): Indirizzo decimale della subnet mask.
         """
-        self.subnet_mask_to_bin()
-        self.__subnet_mask['dec'] = self.__convert_address_to_dec(self.__subnet_mask['bin'])
-        return self.__subnet_mask['dec']
+        if self.__stateIpv4:
+            self.subnet_mask_to_bin()
+            self.__subnet_mask['dec'] = self.__convert_address_to_dec(self.__subnet_mask['bin'])
+            return self.__subnet_mask['dec']
+        else:
+            return None
 
     def wild_card_to_bin(self):
         """
@@ -285,24 +316,31 @@ class IPv4:
 
             :return wild_card_bin (list): Indirizzi wild card in binario
         """
-        result = []
-        for i in range(len(self.__subnet_mask['bin'])):
-            bit = self.__subnet_mask['bin'][i]
-            if bit != '.':
-                result.append(int(not bit))
-            else:
-                result.append(bit)
-        self.__wild_card['bin'] = result
-        return self.__wild_card['bin']
+        if self.__stateIpv4:
+            self.subnet_mask_to_bin()
+            result = []
+            for i in range(len(self.__subnet_mask['bin'])):
+                bit = self.__subnet_mask['bin'][i]
+                if bit != '.':
+                    result.append(int(not bit))
+                else:
+                    result.append(bit)
+            self.__wild_card['bin'] = result
+            return self.__wild_card['bin']
+        else:
+            return None
 
     def wild_card_to_dec(self):
         """
         Metodo che converte la wild card da binario a decimale.
             :return wild_card_dec (list[str]): Indirizzo decimale della wild card.
         """
-        self.wild_card_to_bin()
-        self.__wild_card['dec'] = self.__convert_address_to_dec(self.__wild_card['bin'])
-        return self.__wild_card['dec']
+        if self.__stateIpv4:
+            self.wild_card_to_bin()
+            self.__wild_card['dec'] = self.__convert_address_to_dec(self.__wild_card['bin'])
+            return self.__wild_card['dec']
+        else:
+            return None
 
     def which_class(self):
         """
@@ -310,20 +348,17 @@ class IPv4:
 
             :return class (str): Classe dell'indirizzo.
         """
-        if 0 <= int(self.__ip['dec'][0]) <= 127 and self.__subnet_mask['cidr'] == 8:
-            self.__class = 'A'
-        elif 128 <= int(self.__ip['dec'][0]) <= 191 and self.__subnet_mask['cidr'] == 16:
-            self.__class = 'B'
-        elif 192 <= int(self.__ip['dec'][0]) <= 223 and self.__subnet_mask['cidr'] == 24:
-            self.__class = 'C'
-        else:
-            self.__class = None
-        return self.__class
+        if self.__stateIpv4:
+            if 0 <= int(self.__ip['dec'][0]) <= 127 and self.__subnet_mask['cidr'] == 8:
+                self.__class = 'A'
+            elif 128 <= int(self.__ip['dec'][0]) <= 191 and self.__subnet_mask['cidr'] == 16:
+                self.__class = 'B'
+            elif 192 <= int(self.__ip['dec'][0]) <= 223 and self.__subnet_mask['cidr'] == 24:
+                self.__class = 'C'
+            else:
+                self.__class = None
+            return self.__class
+        return None
 
-
-ip = IPv4("192.168.1.5/24")
-
-
-ip.subnetting(25)
-ip.subnetting(30)
-ip.to_string()
+ip = IPv4("76.55.120.4/33")
+print(ip.broadcast_address_to_bin())
