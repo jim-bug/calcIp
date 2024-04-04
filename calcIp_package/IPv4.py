@@ -58,8 +58,9 @@ class IPv4:
         self.wild_card_to_dec()
         self.network_address_to_dec()
         self.network_address_to_bin()
-        self.broadcast_address_to_dec()
         self.broadcast_address_to_bin()
+        self.broadcast_address_to_dec()
+
         self.which_class()
 
     def to_string(self):
@@ -89,7 +90,7 @@ class IPv4:
         if len(self.__supernets.keys()) > 0:
             for i in self.__supernets.keys():
                 print("\n\n")
-                print(f"\t\tSUPERNETTING {j} from {i}\t\t")
+                print(f"\t\tSUPERNETTING from {i}\t\t")
                 self.__supernets[i].to_string()
 
     def __control_ipv4(self):
@@ -237,12 +238,12 @@ class IPv4:
             return None
 
     def supernetting(self, subnet_mask):
-        if self.__control_ipv4():
-            ip = ''.join(self.__ip['dec'])
+        if self.__stateIpv4:
+            ip = '.'.join(self.__ip['dec'])
             subnet_mask = f"/{subnet_mask}"
             ip = ip+subnet_mask
             print("DEBUG: " + ip)
-            self.__supernets[subnet_mask] = IPv4(ip+subnet_mask)
+            self.__supernets[subnet_mask] = IPv4(ip)
         else:
             return None
 
@@ -256,7 +257,7 @@ class IPv4:
             self.__ip['bin'] = self.__convert_address_to_bin(self.__ip['dec'])
             return self.__ip['bin']
         else:
-            return None
+            self.__ip['bin'] = None
 
     def network_address_to_bin(self):
         """
@@ -268,7 +269,7 @@ class IPv4:
             self.__network_address['bin'] = self.__convert_address_to_bin(self.__network_address['dec'])
             return self.__network_address['bin']
         else:
-            return None
+            self.__network_address['bin'] = None
 
     def network_address_to_dec(self):
         """
@@ -282,7 +283,7 @@ class IPv4:
                 self.__network_address['dec'].append(str( int(self.__ip['dec'][i]) & int(self.__subnet_mask['dec'][i]) ))     # operazione and bit a bit tra ogni byte dell'indirizzo e della subnet mask
             return self.__network_address['dec']
         else:
-            return None
+            self.__network_address['dec'] = None
 
     def broadcast_address_to_bin(self):
         """
@@ -303,7 +304,7 @@ class IPv4:
                     self.__broadcast_address['bin'].append(1)
             return self.__broadcast_address['bin']
         else:
-            return None
+            self.__network_address['dec'] = None
 
     def broadcast_address_to_dec(self):
         """
@@ -315,7 +316,7 @@ class IPv4:
             self.__broadcast_address['dec'] = self.__convert_address_to_dec(self.__broadcast_address['bin'])
             return self.__broadcast_address['dec']
         else:
-            return None
+            self.__broadcast_address['dec'] = None
 
     def subnet_mask_to_bin(self):
         """
@@ -334,7 +335,7 @@ class IPv4:
             self.__subnet_mask['bin'] = subnet_mask_bin
             return subnet_mask_bin
         else:
-            return None
+            self.__subnet_mask['bin'] = None
 
     def subnet_mask_to_dec(self):
         """
@@ -346,7 +347,7 @@ class IPv4:
             self.__subnet_mask['dec'] = self.__convert_address_to_dec(self.__subnet_mask['bin'])
             return self.__subnet_mask['dec']
         else:
-            return None
+            self.__subnet_mask['dec'] = None
 
     def wild_card_to_bin(self):
         """
@@ -366,7 +367,7 @@ class IPv4:
             self.__wild_card['bin'] = result
             return self.__wild_card['bin']
         else:
-            return None
+            self.__wild_card['bin'] = None
 
     def wild_card_to_dec(self):
         """
@@ -378,7 +379,7 @@ class IPv4:
             self.__wild_card['dec'] = self.__convert_address_to_dec(self.__wild_card['bin'])
             return self.__wild_card['dec']
         else:
-            return None
+            self.__wild_card['dec'] = None
 
     def which_class(self):
         """
@@ -399,8 +400,8 @@ class IPv4:
 
 
 
-ip = IPv4("192.168.1.0/24")
-ip.subnetting(25)
-ip.supernetting(23)
-
-print(ip.to_string())
+# ip = IPv4("192.168.1.0/24")
+# ip.subnetting(25)
+# ip.supernetting(23)
+#
+# print(ip.to_string())

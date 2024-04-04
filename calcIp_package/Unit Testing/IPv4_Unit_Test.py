@@ -27,7 +27,7 @@ class MyTestCase(unittest.TestCase):
             if test_output[i] is None:
                 self.assertIsNone(ip.ipv4_to_bin())
             else:
-                self.assertEqual(ip.ipv4_to_bin(), test_output[i])
+                self.assertEqual(ip._IPv4__ip['bin'], test_output[i])
 
     def test_network_address_to_bin(self):
         test_input = [
@@ -49,7 +49,7 @@ class MyTestCase(unittest.TestCase):
             if test_output[i] is None:
                 self.assertIsNone(ip.network_address_to_bin())
             else:
-                self.assertEqual(ip.network_address_to_bin(), test_output[i])
+                self.assertEqual(ip._IPv4__network_address['bin'], test_output[i])
 
     def test_broadcast_address_to_bin(self):
         test_input = [
@@ -72,7 +72,7 @@ class MyTestCase(unittest.TestCase):
             if test_output[i] is None:
                 self.assertIsNone(ip.broadcast_address_to_bin())
             else:
-                self.assertEqual(ip.broadcast_address_to_bin(), test_output[i])
+                self.assertEqual(ip._IPv4__broadcast_address['bin'], test_output[i])
 
     def test_wild_card_to_bin(self):
         test_input = [
@@ -96,7 +96,7 @@ class MyTestCase(unittest.TestCase):
             if test_output[i] is None:
                 self.assertIsNone(ip.wild_card_to_bin())
             else:
-                self.assertEqual(ip.wild_card_to_bin(), test_output[i])
+                self.assertEqual(ip._IPv4__wild_card['bin'], test_output[i])
 
     def test_class(self):
         test_input = [
