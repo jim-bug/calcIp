@@ -1,0 +1,4 @@
+da unittest ho imparato che un metodo per essere definito come unitest deve essere dichiarato come:
+
+def test_method_name(self):
+	pass
