@@ -50,7 +50,7 @@ class IPv4:
         self.__stateIpv4 = True
 
         self.__divided_ip_subnet_mask()
-        self.__control_ipv4()
+        self.__control_state_ipv4()
         self.ipv4_to_bin()
         self.subnet_mask_to_bin()
         self.subnet_mask_to_dec()
@@ -93,14 +93,20 @@ class IPv4:
                 print(f"\t\tSUPERNETTING from {i}\t\t")
                 self.__supernets[i].to_string()
 
-    def __control_ipv4(self):
-        byte = 0 <= int(self.__ip['dec'][0]) <= 255
-        for i in range(1, IPv4.BYTE+1):
-            byte = byte and 0 <= int(self.__ip['dec'][i-1]) <= 255
-        if byte and 0 < self.__subnet_mask['cidr'] <= 32:
-            self.__stateIpv4 = True
-        else:
+    def __control_validate_ipv4(self):
+        return True if self.__ip['dec'][1] == '.' and self.__ip['dec'][3] == '.' and self.__ip['dec'][5] == '.' else False
+    def __control_state_ipv4(self):
+        try:
+            byte = 0 <= int(self.__ip['dec'][0]) <= 255
+            for i in range(1, IPv4.BYTE+1):
+                byte = byte and 0 <= int(self.__ip['dec'][i-1]) <= 255
+            if byte and 0 < self.__subnet_mask['cidr'] <= 32: and self.__control_validate_ipv4():
+                self.__stateIpv4 = True
+            else:
+                self.__stateIpv4 = False
+        except ValueError as exception:
             self.__stateIpv4 = False
+
 
     def __divided_ip_subnet_mask(self):
         """
@@ -402,8 +408,4 @@ class IPv4:
 
 
 
-# ip = IPv4("192.168.1.0/24")
-# ip.subnetting(21)
-# ip.supernetting(23)
-#
-# ip.to_string()
+ip = IPv4(32)
