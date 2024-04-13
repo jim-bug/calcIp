@@ -64,47 +64,49 @@ class IPv4:
         self.which_class()
 
     def to_string(self):
-        print("&&&&&&&&&&&INDIRIZZI DECIMALI&&&&&&&&&&&")
-        print(f"Stato IPv4: {self.__stateIpv4}")
-        self.__print_decimal_ipv4(self.__ip['dec'], "IP: ")
-        print(f"Subnet mask in notazione CIDR:\t/{self.__subnet_mask['cidr']}")
-        self.__print_decimal_ipv4(self.__subnet_mask['dec'], "Subnet mask: ")
-        self.__print_decimal_ipv4(self.__wild_card['dec'], "Wild card: ")
-        self.__print_decimal_ipv4(self.__network_address['dec'], "Indirizzi di rete: ")
-        self.__print_decimal_ipv4(self.__broadcast_address['dec'], "Indirizzi di broadcast: ")
-        print(f"Host massimi: {self.__max_host}")
-        print(f"Classe di indirizzo: {self.__class}")
-        print("&&&&&&&&&&&INDIRIZZI BINARI&&&&&&&&&&&")
-        self.__print_binary_ipv4(self.__ip['bin'], "IP: ")
-        self.__print_binary_ipv4(self.__subnet_mask['bin'], "Subnet mask: ")
-        self.__print_binary_ipv4(self.__wild_card['bin'], "Wild card: ")
-        self.__print_binary_ipv4(self.__network_address['bin'], "Indirizzo di rete: ")
-        self.__print_binary_ipv4(self.__broadcast_address['bin'], "Indirizzi di broacast: ")
-        if len(self.__subnets.keys()) > 0:     # se sono stati effettuati subnet.
-            for i in self.__subnets.keys():
-                for j in range(len(self.__subnets[i])):
+        if self.__stateIpv4:
+            print("&&&&&&&&&&&INDIRIZZI DECIMALI&&&&&&&&&&&")
+            print(f"Stato IPv4: {self.__stateIpv4}")
+            self.__print_decimal_ipv4(self.__ip['dec'], "IP: ")
+            print(f"Subnet mask in notazione CIDR:\t/{self.__subnet_mask['cidr']}")
+            self.__print_decimal_ipv4(self.__subnet_mask['dec'], "Subnet mask: ")
+            self.__print_decimal_ipv4(self.__wild_card['dec'], "Wild card: ")
+            self.__print_decimal_ipv4(self.__network_address['dec'], "Indirizzi di rete: ")
+            self.__print_decimal_ipv4(self.__broadcast_address['dec'], "Indirizzi di broadcast: ")
+            print(f"Host massimi: {self.__max_host}")
+            print(f"Classe di indirizzo: {self.__class}")
+            print("&&&&&&&&&&&INDIRIZZI BINARI&&&&&&&&&&&")
+            self.__print_binary_ipv4(self.__ip['bin'], "IP: ")
+            self.__print_binary_ipv4(self.__subnet_mask['bin'], "Subnet mask: ")
+            self.__print_binary_ipv4(self.__wild_card['bin'], "Wild card: ")
+            self.__print_binary_ipv4(self.__network_address['bin'], "Indirizzo di rete: ")
+            self.__print_binary_ipv4(self.__broadcast_address['bin'], "Indirizzi di broacast: ")
+            if len(self.__subnets.keys()) > 0:     # se sono stati effettuati subnet.
+                for i in self.__subnets.keys():
+                    for j in range(len(self.__subnets[i])):
+                        print("\n\n")
+                        print(f"\t\tSUBNETTING {j+1} from {i}\t\t")
+                        self.__subnets[i][j].to_string()
+            if len(self.__supernets.keys()) > 0:
+                print(Colors.BLUE + "\n\n///////////////////////////////////////////////////////////////" + Colors.RESET)
+                for i in self.__supernets.keys():
                     print("\n\n")
-                    print(f"\t\tSUBNETTING {j+1} from {i}\t\t")
-                    self.__subnets[i][j].to_string()
-        if len(self.__supernets.keys()) > 0:
-            print(Colors.BLUE + "\n\n///////////////////////////////////////////////////////////////" + Colors.RESET)
-            for i in self.__supernets.keys():
-                print("\n\n")
-                print(f"\t\tSUPERNETTING from {i}\t\t")
-                self.__supernets[i].to_string()
+                    print(f"\t\tSUPERNETTING from {i}\t\t")
+                    self.__supernets[i].to_string()
+        else:
+            print("INPUT NON VALIDO, CODE ERROR: 100")
 
-    def __control_validate_ipv4(self):
-        return True if self.__ip['dec'][1] == '.' and self.__ip['dec'][3] == '.' and self.__ip['dec'][5] == '.' else False
+
     def __control_state_ipv4(self):
         try:
             byte = 0 <= int(self.__ip['dec'][0]) <= 255
             for i in range(1, IPv4.BYTE+1):
                 byte = byte and 0 <= int(self.__ip['dec'][i-1]) <= 255
-            if byte and 0 < self.__subnet_mask['cidr'] <= 32: and self.__control_validate_ipv4():
+            if byte and 0 < self.__subnet_mask['cidr'] <= 32:
                 self.__stateIpv4 = True
             else:
                 self.__stateIpv4 = False
-        except ValueError as exception:
+        except:
             self.__stateIpv4 = False
 
 
@@ -113,13 +115,19 @@ class IPv4:
 
         :return:
         """
-        for i in range(len(self.__ip['dec'])):
-            if self.__ip['dec'][i] == '/':
-                self.__subnet_mask['cidr'] = int(self.__ip['dec'][i + 1:])  # estraggo la subnet mask in notazione CIDR, sommo 1 all'indice così parto dalla prima cifra della subnet mask fino alla fine di essa.
-                self.__ip['dec'] = self.__ip['dec'][:i]  # estraggo tutto quello che c'è prima dello / quindi solamente l'ip.
-                self.__ip['dec'] = self.__ip['dec'].split('.')
-                break
-        self.__max_host = (2**(IPv4.bit - self.__subnet_mask['cidr'])) - 2  # trovo gli host massimi di quella rete, non considerando il network e broadcast address.
+        try:
+            for i in range(len(self.__ip['dec'])):
+                if self.__ip['dec'][i] == '/':
+                    self.__subnet_mask['cidr'] = int(self.__ip['dec'][
+                                                     i + 1:])  # estraggo la subnet mask in notazione CIDR, sommo 1 all'indice così parto dalla prima cifra della subnet mask fino alla fine di essa.
+                    self.__ip['dec'] = self.__ip['dec'][
+                                       :i]  # estraggo tutto quello che c'è prima dello / quindi solamente l'ip.
+                    self.__ip['dec'] = self.__ip['dec'].split('.')
+                    break
+            self.__max_host = (2 ** (IPv4.bit - self.__subnet_mask['cidr'])) - 2  # trovo gli host massimi di quella rete, non considerando il network e broadcast address.
+        except:
+            self.__stateIpv4 = False
+
 
     def __convert_dec_byte_to_bin(self, address, bit=8):
         """
@@ -408,4 +416,4 @@ class IPv4:
 
 
 
-ip = IPv4(32)
+ip = IPv4("suca")

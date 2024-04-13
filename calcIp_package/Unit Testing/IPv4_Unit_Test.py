@@ -122,6 +122,27 @@ class MyTestCase(unittest.TestCase):
             else:
                 self.assertEqual(ip.which_class(), test_output[i])
 
+    def test_input(self):
+        test_input = [
+            33,
+            "CIAO",
+            "C.A.B.D",
+            "CIAO.COME.STAI.BENE",
+            "ipv4"
+        ]
+
+        test_output = [
+            None,
+            None,
+            None,
+            None,
+            None
+        ]
+
+        for i in test_input:
+            ip = IPv4(i)
+            self.assertEqual(ip._IPv4__stateIpv4, False)
+
 
 if __name__ == '__main__':
     unittest.main()
