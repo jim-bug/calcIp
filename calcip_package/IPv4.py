@@ -1,4 +1,4 @@
-from calcIp_package.colors.color import Colors
+from calcip_package.colors.color import Colors
 
 
 class IPv4:

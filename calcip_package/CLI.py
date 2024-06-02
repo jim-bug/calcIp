@@ -1,6 +1,6 @@
 import sys
-import calcIp_package as cp
-from calcIp_package.IPv4 import IPv4
+import calcip_package as cp
+from calcip_package.IPv4 import IPv4
 
 
 class CLI:

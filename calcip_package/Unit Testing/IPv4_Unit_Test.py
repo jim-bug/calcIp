@@ -1,5 +1,5 @@
 import unittest
-from calcIp_package.IPv4 import IPv4
+from calcip_package.IPv4 import IPv4
 # Autore: Ignazio Leonardo Calogero Sperandeo
 # Data: 02/04/2024
 # by jim_bug :)
