@@ -38,24 +38,24 @@ class CLI:
                 for i in input_argument:
                     if i == '-h' or i == '--help':      # se è presente la richiesta di visualizzare l'help interrompo il processo.
                         CLI.help_calcip()
-                        input_argument.remove(i)
+                        # input_argument.remove(i)
                         raise Exception
-            return input_argument[0], input_argument[1], input_argument[2]
+            return input_argument[1], input_argument[2], input_argument[0]
         except:
             exit(0)
 
 
     @staticmethod
     def run_calcip():
-        ip, subnetmask_subnetting, subnetmask_supernetting = CLI.filter_argument()
+        ip, new_subnet_mask, option = CLI.filter_argument()
         ipv4 = IPv4(ip)
         try:
-            if subnetmask_subnetting != 'x':
-                ipv4.subnetting(int(subnetmask_subnetting))
-            if subnetmask_supernetting != 'x':
-                ipv4.supernetting(int(subnetmask_supernetting))
+            if option == '-s':
+                ipv4.subnetting(int(new_subnet_mask))
+            elif option == '-S':
+                ipv4.supernetting(int(new_subnet_mask))
         except:
-            print("Input del subentting o supernetting invalido, CODE ERROR: 102")
+            print(f"Input del subentting o supernetting invalido, CODE ERROR: 102")
         ipv4.to_string()
 
     @staticmethod
@@ -65,6 +65,8 @@ Usage: python3 Main.py [OPTIONS] [IP] [SUBNETS] [SUPERNETS]
 
 Options:
 -h, --help Show this message and exit
+-s, Used for making subnetting from the new subnet mask
+-S, Used for making supernetting from the new subnet mask
 
 IP: ip address along with subnet information (CIDR notation)
 SUBNETS: new subnet mask for subnetting (less than subnet)

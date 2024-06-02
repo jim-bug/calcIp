@@ -22,11 +22,11 @@ python3 Main.py 192.168.1.67/24
 ```
 Esempio con il subnetting:
 ```bash
-python3 Main.py 192.168.1.67/24 29
+python3 Main.py -s 192.168.1.67/24 29
 ```
 Esempio con supernetting:
 ```bash
-python3 Main.py 192.168.1.67/24 X 23
+python3 Main.py -S 192.168.1.67/24 23
 ```
 
 ## Licenza
