@@ -2,23 +2,19 @@
 
 ![Licenza](https://img.shields.io/badge/license-GNU-blue.svg)
 ![Versione](https://img.shields.io/badge/version-1.0.0-green.svg)
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
-Una breve descrizione del progetto che spiega lo scopo e le funzionalità principali.
+## Index
 
-## Sommario
+- [Introduction](#introduction)
+- [Features](#features)
+- [Installation](#installation)
+- [License](#license)
+- [Contact](#contact)
 
-- [Introduzione](#introduzione)
-- [Caratteristiche](#caratteristiche)
-- [Installazione](#installazione)
-- [Utilizzo](#utilizzo)
-- [Contributi](#contributi)
-- [Licenza](#licenza)
-- [Ringraziamenti](#ringraziamenti)
 
 ## Introduction
 
-CalcIp is a software it's capable to study an IPv4 along with its subnet mask(CIDR) and it's can make subnetting or supernetting by a new subnet mask. CalcIp has born to automate the IPv4 plan on router. I've used The software engineering to develop this project. 
+CalcIp is a software it's capable to study an IPv4 along with its subnet mask(CIDR) and it's can make subnetting or supernetting by a new subnet mask. CalcIp has born to automate the IPv4 plan on router. I've used The software engineering to develop this project.
 
 ## Features
 
@@ -33,15 +29,37 @@ CalcIp is a software it's capable to study an IPv4 along with its subnet mask(CI
 
 ## Installation
 
-### Prerequisiti
-
-- Nothing
-
-### Passaggi
+### Steps
 
 ```bash
 # Clone repository
 git clone https://github.com/jim-bug/calcip.git
 cd calcip
+```
+```bash
+# SUPERNETTING
+bash calcip.sh -S IP/SB NEW_SB
+```
+```bash
+# subnetting
+bash calcip.sh -s IP/SB NEW_SB
+```
+```bash
+# Only IPv4 studing
+bash calcip.sh IP/SB
+```
+```bash
+# Help
+bash calcip.sh -h
+```
+
+### Note:
+In the SUPERNETTING case ```NEW_SB``` have to be less than ```SB```. The subnetting case ```NEW_SB``` have to be greater than ```NEW_SB```.
+
+## License
+
+[GPL-3.0](https://choosealicense.com/licenses/gpl-3.0/)
 
 
+## Contact
+You can contact me using -> ignazioandsperandeo@gmail.com

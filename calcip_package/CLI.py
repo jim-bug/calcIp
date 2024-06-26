@@ -11,10 +11,9 @@ class CLI:
     def extract_argument():
         args = ['x' for i in range(5)]
         if len(sys.argv)-1 < 1:
-            return False    # ritorno una lista shiftata di 1 da sinistra, questo -1 è dovuto al fatto che dentro la lista sys.argv è presente anche il nome del file dato che son parametri da CLI
+            return False
         for i in range(1, len(sys.argv)):
-            args[i-1] = sys.argv[i]     # l'indice di sys.argv deve partire da 1 così da evitare di comprendere il nome del file.
-        print(args)
+            args[i-1] = sys.argv[i]
         return args
 
 
@@ -62,7 +61,7 @@ class CLI:
     @staticmethod
     def help_calcip():
         help_message = """
-Usage: python3 Main.py [OPTIONS] [IP] [SUBNETS] [SUPERNETS]
+Usage: bash calcip.sh [OPTIONS] [IP] [NEW_SB]
 
 Options:
 -h, --help Show this message and exit
@@ -70,6 +69,7 @@ Options:
 -S, Used for making supernetting from the new subnet mask
 
 IP: ip address along with subnet information (CIDR notation)
+NEW_SB: New subnet for supernetting or subnetting it depends -s or -S
 SUBNETS: new subnet mask for subnetting (less than subnet)
 SUPERNETS: new supernet mask for supernetting (greater than subnet)
         """
