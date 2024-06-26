@@ -1,36 +1,47 @@
-# calcip
+# CalcIp
 
-## Introduzione
-Calcip è un progetto software in grado di estrarre quanto possibile da un indirizzo ip e la sua corrispettiva subnet mask.
-Calcip nasce come strumento di verifica di subnetting e supernetting per le configurazioni dei router svolte presso il mio istituto. Volevo trovare un modo di unire due materie
-e calcip ne è la dimostrazione, dato che è stato totalmente modificato con la versione 2 utilizzando l'ingegnieria del software.
+![Licenza](https://img.shields.io/badge/license-GNU-blue.svg)
+![Versione](https://img.shields.io/badge/version-1.0.0-green.svg)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
 
-## Descrizione
-Calcip oltre ad essere in grado di estrarre quanto possibile da un ip e la sua corrispettiva subnetmask, è in grado di effettuare subnetting e supernetting,
-richiedendo solamente la nuova subnet mask per il subnetting o supernetting. Calcip permette una visualizzazione a colori dei bit e byte dedicati alla rete e all'host attraverso le ANSI escape.
+Una breve descrizione del progetto che spiega lo scopo e le funzionalità principali.
+
+## Sommario
+
+- [Introduzione](#introduzione)
+- [Caratteristiche](#caratteristiche)
+- [Installazione](#installazione)
+- [Utilizzo](#utilizzo)
+- [Contributi](#contributi)
+- [Licenza](#licenza)
+- [Ringraziamenti](#ringraziamenti)
+
+## Introduction
+
+CalcIp is a software it's capable to study an IPv4 along with its subnet mask(CIDR) and it's can make subnetting or supernetting by a new subnet mask. CalcIp has born to automate the IPv4 plan on router. I've used The software engineering to develop this project. 
+
+## Features
+
+- **Network Address**: CalcIp provides converted network address to decimal, binary.
+- **Broadcast Address**: CalcIp provides converted broadcast address to decimal, binary.
+- **Subnet Mask**: CalcIp provides converted subnet mask to decimal, binary, CIDR.
+- **Wild Card**: CalcIp provides converted wild card to decimal, binary.
+- **IPv4**: CalcIp gives converted input address to decimal, binary.
+- **Max Hosts**: CalcIp provides the number of maximum hosts.
+- **ClassFul**: If the incoming subnet mask is class, CalcIp provides the address class.
 
 
+## Installation
 
-## Utilizzo
-Per utilizzare calcip bisogna seguire la seguente sintassi:
+### Prerequisiti
+
+- Nothing
+
+### Passaggi
+
 ```bash
-python3 Main.py [OPTIONS] [IP/CIDR_SUBNETMASK] [SUBNETMASK] [SUPERNET_MASK]
-```
-Un esempio pratico è il seguente, con previsto solo l'ip:
-```bash
-python3 Main.py 192.168.1.67/24
-```
-Esempio con il subnetting:
-```bash
-python3 Main.py -s 192.168.1.67/24 29
-```
-Esempio con supernetting:
-```bash
-python3 Main.py -S 192.168.1.67/24 23
-```
+# Clone repository
+git clone https://github.com/jim-bug/calcip.git
+cd calcip
 
-## Licenza
-Calcip ha la licenza GNU GPL v3.0.
 
-## Contatti
-Per contattarmi potete scrivermi presso questo indirizzo email: ignazioandsperandeo@gmail.com

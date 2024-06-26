@@ -1,5 +1,5 @@
 import sys
-import calcip_package as cp
+from calcip_package import print_calcip_information
 from calcip_package.IPv4 import IPv4
 
 
@@ -14,6 +14,7 @@ class CLI:
             return False    # ritorno una lista shiftata di 1 da sinistra, questo -1 è dovuto al fatto che dentro la lista sys.argv è presente anche il nome del file dato che son parametri da CLI
         for i in range(1, len(sys.argv)):
             args[i-1] = sys.argv[i]     # l'indice di sys.argv deve partire da 1 così da evitare di comprendere il nome del file.
+        print(args)
         return args
 
 
@@ -40,7 +41,7 @@ class CLI:
                         CLI.help_calcip()
                         # input_argument.remove(i)
                         raise Exception
-            return input_argument[1], input_argument[2], input_argument[0]
+            return input_argument[0], input_argument[1], input_argument[2]
         except:
             exit(0)
 
@@ -73,6 +74,6 @@ SUBNETS: new subnet mask for subnetting (less than subnet)
 SUPERNETS: new supernet mask for supernetting (greater than subnet)
         """
         print(help_message)
-        cp.print_calcip_information()
+        print_calcip_information()
 
 

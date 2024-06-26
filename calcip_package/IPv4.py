@@ -411,9 +411,4 @@ class IPv4:
                 self.__class = None
             return self.__class
         return None
-
-
-
-
-
-ip = IPv4("suca")
+# :)
